@@ -7,7 +7,7 @@ export function NativeNavigation() {
 
   const Stack = createNativeStackNavigator<{
     home: undefined
-    login: undefined
+    'login': undefined
     'user-detail': {
       id: string
     }
