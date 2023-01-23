@@ -5,7 +5,7 @@ import { View } from 'app/design/view'
 import { useCallback, useEffect, useState } from 'react';
 import { User } from '../login/gqlTypes';
 import { GET_POSTS } from '../posts/gql';
-import { PostResponse } from '../posts/gqlTypes';
+import { Post, PostResponse } from '../posts/gqlTypes';
 import { FeedItem } from './feed/feed-item';
 // import Image from 'next/image'
 export function HomeScreen() {
@@ -34,8 +34,8 @@ export function HomeScreen() {
       if (error) console.log("Error Fetching Posts..." + error.message + data);
       if(data != null){
         console.log(data)
-          if (data?.postsByUser.length > 0){
-              console.log("Got " + data.postsByUser.length + " posts: " + JSON.stringify(data))      
+          if (data?.posts.length > 0){
+              console.log("Got " + data.posts.length + " posts: " + JSON.stringify(data))      
           }else {
             console.log("Got empty post array: " + data)
           }
@@ -46,11 +46,11 @@ export function HomeScreen() {
   }, [fetchUser, loading, error, data]);
 
   const rows: any[] = [];
-    let numberOfPosts = data?.postsByUser ? data?.postsByUser.length : 0
+    let numberOfPosts = data?.posts ? data?.posts.length : 0
     for (let i = 0; i < numberOfPosts; i++) {
         // note: we are adding a key prop here to allow react to uniquely identify each
         // element in this array. see: https://reactjs.org/docs/lists-and-keys.html
-        const post = data?.postsByUser[i]
+        const post = data?.posts[i] as Post
         console.log("feed item " + i + " contains post: " + JSON.stringify(post))
         rows.push(<FeedItem post={post}></FeedItem>);
     }

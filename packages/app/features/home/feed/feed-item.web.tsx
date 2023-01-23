@@ -30,12 +30,14 @@ export function FeedItem({post}){
         return "rounded-full ring-4 ring-offset-2 " + effortColor
     }
 
+    const fullName = feedPost.user.firstName + " " + feedPost.user.lastName
+
     return (
         <div className="md:flex-col z-10 border pt-4 rounded-lg shadow-md bg-gray-100 mb-5">
             <div className="flex px-4">
                 <img className={getStyleBasedOnEffort()} src={feedPost.user.profilePic} alt="" style={{width:44, height:44}}></img>
                 <div className="flex-col justify-between  items-center ml-4 mb-4">
-                    <p className="font-medium text-black duration-300 transition ease-in-out text-sm">{feedPost.user.fullName}</p>
+                    <p className="font-medium text-black duration-300 transition ease-in-out text-sm">{fullName}</p>
                     <p className="font-medium text-slate-600 duration-300 transition ease-in-out text-sm">{postTime}</p>
                 </div>
             </div>

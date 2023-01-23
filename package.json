@@ -18,6 +18,9 @@
     "typescript": "^4.7.4",
     "typescript-cookie": "^1.0.4"
   },
+  "dependencies": {
+    "react-tabs": "^5.1.0"
+  },
   "scripts": {
     "native": "cd apps/expo && expo start",
     "web": "cd apps/next && yarn next"

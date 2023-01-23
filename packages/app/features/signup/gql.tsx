@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
-export const SIGN_IN = gql`
-    mutation signIn($signInReq: SignInReq!) {
-        signIn(signInReq: $signInReq) {
+export const SIGN_UP = gql`
+    mutation signUp($signUpReq: SignUpReq!) {
+        signUp(signUpReq: $signUpReq) {
             success
             message
             token

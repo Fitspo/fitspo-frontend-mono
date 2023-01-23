@@ -30,7 +30,7 @@ export function FeedItem({post}: { post: Post }){
         }
     }
 
-    // const postUri = feedPost.media as string
+    const fullName = feedPost.user.firstName + " " + feedPost.user.lastName
 
     return (
         <View className="md:flex flex-start z-10 block rounded-lg shadow-md bg-gray-100 mb-5">
@@ -39,7 +39,7 @@ export function FeedItem({post}: { post: Post }){
                     <Image source={{uri:feedPost.user.profilePic as string}} style={{width:44, height:44, borderRadius: 44/ 2, margin:2}}></Image>
                 </View>
                 <View className="flex-col justify-between  ml-4 mb-4">
-                    <Text className="font-medium text-black duration-300 transition ease-in-out text-sm">{feedPost.user.fullName}</Text>
+                    <Text className="font-medium text-black duration-300 transition ease-in-out text-sm">{fullName}</Text>
                     <Text className="font-medium text-slate-600 duration-300 transition ease-in-out text-sm">{postTime}</Text>
                 </View>
             </View>

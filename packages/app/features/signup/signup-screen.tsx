@@ -6,8 +6,8 @@ import { Button, GestureResponderEvent } from 'react-native';
 import { TextLink } from 'solito/link'
 import { useRouter } from 'solito/router'
 import { useMutation } from '@apollo/client';
-import { LoginResponse } from './gqlTypes';
-import { SIGN_IN } from './gql';
+import { SignUpResponse } from './gqlTypes';
+import { SIGN_UP } from './gql';
 import * as Auth from '../../helpers/auth'
 import * as NavigationService from '../../navigation/native/NavigationService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -15,13 +15,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const VALID_EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 const VALID_PASSWORD_REGEX = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/
 
-export function LoginScreen() {
+export function SignupScreen() {
     const router = useRouter()
+    const [firstName, setFirstName] = React.useState('');
+    const [lastName, setLastName] = React.useState('');
     const [email, setEmail] = React.useState('');
-    const [password, setPassword] = React.useState('');    
+    const [password, setPassword] = React.useState('');  
+    const [rePassword, setRePassword] = React.useState('');      
     const [emailError, setEmailError] = React.useState('');
     const [passwordError, setPasswordError] = React.useState('')
-    const [signInUser, { data, loading, error, reset}] = useMutation<LoginResponse>(SIGN_IN);
+    const [signUpUser, { data, loading, error, reset}] = useMutation<SignUpResponse>(SIGN_UP);
 
     const styles = StyleSheet.create({
         input: {
@@ -35,9 +38,15 @@ export function LoginScreen() {
 
     const buttonHandler = (event: GestureResponderEvent) => {
         event.preventDefault();
-        if(validateEmail(email)){
-            const signInReq = { email: email, password: password }
-            signInUser({ variables: { signInReq } });
+        if(validateEmail(email)  && validatePassword(password, rePassword)){
+            const signUpReq = { 
+                firstName: firstName,
+                lastName:lastName,
+                email: email,
+                password: password,
+                rePassword: rePassword
+            }
+            signUpUser({ variables: { signUpReq } });
         }
     };
 
@@ -54,17 +63,22 @@ export function LoginScreen() {
         return valid
     }
 
-    function validatePassword(password: string) {
-        let valid = VALID_PASSWORD_REGEX.test(password)
-        if(!valid){
+    function validatePassword(password: string, rePassword: string) {
+        let validPassword = VALID_PASSWORD_REGEX.test(password)
+        let passwordsMatch = password === rePassword
+        if(!validPassword){
             console.log("Invalid password format")
             setPasswordError('Password is invalid');
+        }else if(!passwordsMatch){
+            console.log("Passwords do not match")
+            setPasswordError("Passwords do not match")
         }else {
-            console.log("Valid password format")
+            console.log("Valid password format and passwords match")
             setPasswordError("");
         }
         setPassword(password);
-        return valid
+        setRePassword(rePassword);
+        return validPassword && passwordsMatch
     }
 
     function getEmailInputBorderColor(): string{
@@ -96,13 +110,13 @@ export function LoginScreen() {
         if (error) console.log("Error Logging in..." + error.message);
         if(data != null){
             console.log("login response: " + JSON.stringify(data));
-            if (data?.signIn.success){
+            if (data?.signUp.success){
                 console.log(data)
                 // Save the token
-                Auth.storeToken(JSON.stringify(data?.signIn.token))
+                Auth.storeToken(JSON.stringify(data?.signUp.token))
 
                 // Set the UserContext
-                AsyncStorage.setItem('user', JSON.stringify(data.signIn.user))
+                AsyncStorage.setItem('user', JSON.stringify(data.signUp.user))
 
                 // clear forms and reset data
                 reset()
@@ -111,15 +125,15 @@ export function LoginScreen() {
     
                 // Navigate to home screen
                 if(Platform.OS === 'web'){
-                    router.replace('/home')
+                    router.replace('/login')
                 }else {
                     NavigationService.navigationRef.resetRoot({
                         index: 0,
-                        routes: [{name: 'home'},],
+                        routes: [{name: 'login'},],
                     });
                 }      
-            }else if(!data?.signIn.success){
-                console.log("Failed to log in: " + data?.signIn.message)
+            }else if(!data?.signUp.success){
+                console.log("Failed to log in: " + data?.signUp.message)
             }
         }
         
@@ -127,9 +141,21 @@ export function LoginScreen() {
 
     return (
         <View className="flex-1 items-center justify-center">
-            <Text className="mb-4 text-center font-bold">Login Screen</Text>
+            <Text className="mb-4 text-center font-bold">Sign Up Screen</Text>
             {error != null && <Text style={{color: 'red'}}>{error.message}</Text>}
-            {!data?.signIn.success && <Text style={{color: 'red'}}>{data?.signIn.message}</Text>}
+            {!data?.signUp.success && <Text style={{color: 'red'}}>{data?.signUp.message}</Text>}
+            <TextInput
+                placeholder="First Name"
+                value={firstName}
+                onChangeText={(e) => setFirstName(e)}
+                style={{...styles.input}}
+            />
+            <TextInput
+                placeholder="Last Name"
+                value={lastName}
+                onChangeText={(e) => setLastName(e)}
+                style={{...styles.input}}
+            />
             <TextInput
                 placeholder="Email"
                 value={email}
@@ -139,13 +165,21 @@ export function LoginScreen() {
             <TextInput
                 placeholder="Password"
                 value={password}
-                onChangeText={(e) => validatePassword(e)}
+                onChangeText={(e) => validatePassword(e, rePassword)}
                 secureTextEntry
 
                 style={{...styles.input, borderColor: getPasswordInputBorderColor()}}
             />
-            <Button onPress={buttonHandler} title="Login"></Button>
-            <TextLink href="/signup">Create account</TextLink>
+            <TextInput
+                placeholder="Re-enter Password"
+                value={rePassword}
+                onChangeText={(e) => validatePassword(password, e)}
+                secureTextEntry
+
+                style={{...styles.input, borderColor: getPasswordInputBorderColor()}}
+            />
+            <Button onPress={buttonHandler} title="Sign Up"></Button>
+            <TextLink href="/login">Already have an account? Login Now</TextLink>
         </View>
     )
        
