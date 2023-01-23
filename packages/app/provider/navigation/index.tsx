@@ -16,6 +16,7 @@ export function NavigationProvider({
             initialRouteName: 'login',
             screens: {
               login: 'login',
+              signup: 'signup',
               home: 'home'
             },
           },
