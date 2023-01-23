@@ -1,7 +1,7 @@
 import { User } from "../login/gqlTypes";
 
 export type PostResponse = {
-    postsByUser: [Post];
+    posts: [Post];
 };
 
 export type CreatePostResponse = {
