@@ -36,7 +36,7 @@ export function FeedItem({post}: { post: Post }){
         <View className="md:flex flex-start z-10 block rounded-lg shadow-md bg-gray-100 mb-5">
             <View className="flex-row px-4 pt-4 ">
                 <View className="items-center" style={{width:52, height:52, borderRadius: 52/ 2, borderWidth: 2, borderColor: getEffortColor()}}>
-                    <Image source={{uri:feedPost.user.profilePic}} style={{width:44, height:44, borderRadius: 44/ 2, margin:2}}></Image>
+                    <Image source={{uri:feedPost.user.profilePic as string}} style={{width:44, height:44, borderRadius: 44/ 2, margin:2}}></Image>
                 </View>
                 <View className="flex-col justify-between  ml-4 mb-4">
                     <Text className="font-medium text-black duration-300 transition ease-in-out text-sm">{feedPost.user.fullName}</Text>
