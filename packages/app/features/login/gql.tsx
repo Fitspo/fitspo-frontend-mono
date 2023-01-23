@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const LOGIN = gql`
+export const SIGN_IN = gql`
     mutation signIn($signInReq: SignInReq!) {
         signIn(signInReq: $signInReq) {
             success
@@ -8,7 +8,8 @@ export const LOGIN = gql`
             token
             user{
                 id
-                name
+                firstName
+                lastName
                 createdAt
                 updatedAt
                 profilePic

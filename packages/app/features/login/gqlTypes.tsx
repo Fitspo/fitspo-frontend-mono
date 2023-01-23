@@ -1,31 +1,24 @@
-export type SignInResponse = {
-    __typename: string;
-    message: string;
-    success: boolean;
-    token: string;
-    user: User;
-};
-
 export type SignInReq = {
     email: String;
     password: String;
 }
 
 export type User = {
-    id: string;
+    id: String;
     createdAt: Date;
     updatedAt: Date;
-    fullName: string;
+    firstName: String;
+    lastName: String;
     profilePic: String;
     latestEffort: String;
-    email: string;
+    email: String;
   }
 
 export type Response = {
-    __typename: string;
-    message: string;
-    success: boolean;
-    token: string;
+    __typename: String;
+    message: String;
+    success: Boolean;
+    token: String;
     user: User;
 }
 

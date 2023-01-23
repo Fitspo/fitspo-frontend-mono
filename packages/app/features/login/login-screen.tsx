@@ -7,7 +7,7 @@ import { TextLink } from 'solito/link'
 import { useRouter } from 'solito/router'
 import { useMutation } from '@apollo/client';
 import { LoginResponse } from './gqlTypes';
-import { LOGIN } from './gql';
+import { SIGN_IN } from './gql';
 import * as Auth from '../../helpers/auth'
 import * as NavigationService from '../../navigation/native/NavigationService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,7 +21,7 @@ export function LoginScreen() {
     const [password, setPassword] = React.useState('');    
     const [emailError, setEmailError] = React.useState('');
     const [passwordError, setPasswordError] = React.useState('')
-    const [loginUser, { data, loading, error, reset}] = useMutation<LoginResponse>(LOGIN);
+    const [signInUser, { data, loading, error, reset}] = useMutation<LoginResponse>(SIGN_IN);
 
     const styles = StyleSheet.create({
         input: {
@@ -37,7 +37,7 @@ export function LoginScreen() {
         event.preventDefault();
         if(validateEmail(email)){
             const signInReq = { email: email, password: password }
-            loginUser({ variables: { signInReq } });
+            signInUser({ variables: { signInReq } });
         }
     };
 
