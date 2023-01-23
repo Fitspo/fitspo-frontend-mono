@@ -14,7 +14,7 @@ export default function NavBar(props) {
                 <div className="navbar-collapse collapse  items-center" id="navbarSupportedContentY">
                     <ul className="navbar-nav mr-auto lg:flex lg:flex-row">
                         <button onClick={() => router.replace('/home')} type="button" className="flex mr-3 text-sm" >
-                            <img className="block h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500" alt="SoFit Logo"/>
+                            <img className="block h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500" alt="Fitspo Logo"/>
                         </button>
                     </ul>
                 </div>
