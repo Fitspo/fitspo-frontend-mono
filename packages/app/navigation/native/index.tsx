@@ -5,16 +5,8 @@ import { UserDetailScreen } from '../../features/user/detail-screen'
 
 export function NativeNavigation() {
 
-  const Stack = createNativeStackNavigator<{
-    home: undefined
-    login: undefined
-    'user-detail': {
-      id: string
-    }
-  }>()
-  
   const AuthStack = createNativeStackNavigator();
-  function AuthStackScreen() {
+  function AuthStackScreens() {
     return (
       <AuthStack.Navigator>
         <AuthStack.Screen name="login" component={LoginScreen} options={{ headerShown: false, }}/>
@@ -23,12 +15,7 @@ export function NativeNavigation() {
   }
 
   return (
-
-    <Stack.Navigator>
-      <>
-        <Stack.Screen name="login" component={AuthStackScreen} options={{ headerShown: false, }}/>
-      </>
-    </Stack.Navigator>
+    AuthStackScreens()
   )
 }
 
