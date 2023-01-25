@@ -20,7 +20,8 @@
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^6.4.0",
-    "react-tabs": "^5.1.0"
+    "react-tabs": "^5.1.0",
+    "emoji-picker-react": "^4.4.6"
   },
   "scripts": {
     "native": "cd apps/expo && expo start",
