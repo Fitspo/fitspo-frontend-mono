@@ -15,10 +15,7 @@ export function NativeNavigation() {
       <AuthStack.Navigator>
         <AuthStack.Screen name="login" component={LoginScreen} options={{ headerShown: false, }}/>
         <AuthStack.Screen name="signup" component={SignupScreen} options={{ title: 'Signup', }} />
-        <AuthStack.Screen name="home" component={HomeScreen} options={{ title: 'Home', tabBarBadge: undefined, 
-          tabBarIcon: ({ focused, color, size }) => (<Icon name={focused ? 'home' : 'home-outline'}  size={25}/>) }} />
-        <AuthStack.Screen name="create-post" component={CreatePostScreen} options={{ title: 'Create Post',
-          tabBarIcon: ({ focused, color, size }) => (<Icon name={focused ? 'add-circle' : 'add-circle-outline'} size={25}/>)}} />
+        <AuthStack.Screen name="home" component={HomeTabStackScreen} options={{ headerShown: false, }} />
       </AuthStack.Navigator>
     );
   }
