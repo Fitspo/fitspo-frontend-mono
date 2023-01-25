@@ -1,26 +1,26 @@
-import { Post } from "app/features/posts/gqlTypes"
+import { Effort, Post } from "app/features/posts/gqlTypes"
 
 export function FeedItem({post}){
 
     console.log("Feed item: "+ JSON.stringify(post))
     const feedPost = post as Post
-    const postTime = JSON.stringify(feedPost.updatedAt)
-
+    const postTime = new Date(feedPost.updatedAt).toLocaleDateString()
+      
     function feedMediaNull(){
-        return feedPost.media === null || feedPost.media === ""
+        return feedPost.media === null || feedPost.media === "" || feedPost.media[0] === ""
     }
 
     function getStyleBasedOnEffort(){
         let effortColor
         console.log("Getting style based on effort: " + feedPost.effort)
         switch (feedPost.effort) {
-            case "high":
+            case Effort.HIGH:
                 effortColor = 'ring-red-500'
                 break;
-            case "medium":
+            case Effort.MEDIUM:
                 effortColor = 'ring-yellow-500'
                 break;
-            case "low":
+            case Effort.LOW:
                 effortColor = 'ring-green-500'
                 break;
             default:
@@ -30,12 +30,12 @@ export function FeedItem({post}){
         return "rounded-full ring-4 ring-offset-2 " + effortColor
     }
 
-    const fullName = feedPost.user.firstName + " " + feedPost.user.lastName
+    const fullName = feedPost.creator.firstName + " " + feedPost.creator.lastName
 
     return (
         <div className="md:flex-col z-10 border pt-4 rounded-lg shadow-md bg-gray-100 mb-5">
             <div className="flex px-4">
-                <img className={getStyleBasedOnEffort()} src={feedPost.user.profilePic} alt="" style={{width:44, height:44}}></img>
+                <img className={getStyleBasedOnEffort()} src={feedPost.creator.profilePic} alt="" style={{width:44, height:44}}></img>
                 <div className="flex-col justify-between  items-center ml-4 mb-4">
                     <p className="font-medium text-black duration-300 transition ease-in-out text-sm">{fullName}</p>
                     <p className="font-medium text-slate-600 duration-300 transition ease-in-out text-sm">{postTime}</p>
@@ -53,7 +53,7 @@ export function FeedItem({post}){
                     </div>
                 </div>}
                 <div className="px-4">
-                    <p className="text-gray-700 my-4">{feedPost.message}</p>
+                    <p className="text-gray-700 my-4">{feedPost.content}</p>
                     <div className="flex-row justify-between space-x-4">
                         <button >
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
