@@ -15,7 +15,7 @@ export const GET_POSTS = gql`
             content
             media
             effort
-
+            effortEmoji
             commentsAggregate {
                 count
             }
@@ -43,21 +43,18 @@ export const GET_POSTS = gql`
 `;
 
 export const CREATE_POST = gql`
-    mutation CreatePost($createPostReq: CreatePostReq!) {
-        createPost(createPostReq: $createPostReq) {
-        id
-        user {
-            profilePic
-            latestEffort
-            firstName
-            lastName
+    mutation CreatePost($input: [PostCreateInput!]!) {
+    createPosts(input: $input) {
+        posts {
+        content
+        creator {
             id
+            firstName
         }
-        createdAt
-        updatedAt
-        message
-        media
         effort
-        }
+        effortEmoji
+        id
     }
+  }
+}
 `;
