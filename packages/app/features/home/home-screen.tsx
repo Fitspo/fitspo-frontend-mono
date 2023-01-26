@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export function HomeScreen() {
 
   const [currentUser, setCurrentUser] = useState({} as User);
+  const [refreshing, setRefreshing] = useState(false)
 
   const fetchUser = useCallback(async()=> {
     const userVal = await AsyncStorage.getItem('user')
@@ -57,12 +58,13 @@ export function HomeScreen() {
         rows.push(post);
     }
 
-
   return (
     <View className="flex-1 bg-white ">
       <FlatList
         data={rows.reverse()}
         renderItem={({item}: { item: Post }) => <FeedItem post={item}></FeedItem>}
+        refreshing={false}
+        onRefresh={refetch}
       />
     </View>
   )
