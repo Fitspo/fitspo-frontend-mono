@@ -11,6 +11,7 @@ import { SIGN_IN } from './gql';
 import * as Auth from '../../helpers/auth'
 import * as NavigationService from '../../navigation/native/NavigationService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
 
 const VALID_EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 const VALID_PASSWORD_REGEX = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/
@@ -103,7 +104,7 @@ export function LoginScreen() {
 
                 // Set the UserContext
                 AsyncStorage.setItem('user', JSON.stringify(data.signIn.user))
-
+                SecureStore.setItemAsync('user', JSON.stringify(data.signIn.user))
                 // clear forms and reset data
                 reset()
                 setEmail('')
