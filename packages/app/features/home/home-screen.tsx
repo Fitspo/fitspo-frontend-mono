@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
 import { User } from '../login/gqlTypes';
 import { GET_POSTS } from '../posts/gql';
-import { Post, PostResponse } from '../posts/gqlTypes';
+import { Post, Response } from '../posts/gqlTypes';
 import { FeedItem } from './feed/feed-item';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export function HomeScreen() {
 
   const [currentUser, setCurrentUser] = useState({} as User);
+  const [refreshing, setRefreshing] = useState(false)
 
   const fetchUser = useCallback(async()=> {
     const userVal = await AsyncStorage.getItem('user')
@@ -24,7 +25,7 @@ export function HomeScreen() {
       console.log("Current User: " + JSON.stringify(user))
   }, [])
 
-    const { loading, error, data, refetch } = useQuery<PostResponse>(GET_POSTS, {
+    const { loading, error, data, refetch } = useQuery<Response>(GET_POSTS, {
         variables: { userId: Number(currentUser.id) },
       });
 
@@ -57,12 +58,13 @@ export function HomeScreen() {
         rows.push(post);
     }
 
-
   return (
     <View className="flex-1 bg-white ">
       <FlatList
-        data={rows}
+        data={rows.reverse()}
         renderItem={({item}: { item: Post }) => <FeedItem post={item}></FeedItem>}
+        refreshing={false}
+        onRefresh={refetch}
       />
     </View>
   )

@@ -5,7 +5,7 @@ import { View } from 'app/design/view'
 import { useCallback, useEffect, useState } from 'react';
 import { User } from '../login/gqlTypes';
 import { GET_POSTS } from '../posts/gql';
-import { Post, PostResponse } from '../posts/gqlTypes';
+import { Post, Response } from '../posts/gqlTypes';
 import { FeedItem } from './feed/feed-item';
 // import Image from 'next/image'
 export function HomeScreen() {
@@ -22,8 +22,8 @@ export function HomeScreen() {
       console.log("Current User: " + JSON.stringify(user))
   }, [])
 
-    const { loading, error, data, refetch } = useQuery<PostResponse>(GET_POSTS, {
-        variables: { userId: Number(currentUser.id) },
+    const { loading, error, data, refetch } = useQuery<Response>(GET_POSTS, {
+        variables: { userId: currentUser.id },
       });
 
     // const [userPosts, { data, loading, error, reset}] = useQuery<PostResponse>(GET_POSTS);

@@ -1,38 +1,46 @@
 import { User } from "../login/gqlTypes";
 
-export type PostResponse = {
-    posts: [Post];
-};
-
-export type CreatePostResponse = {
-    post: Post;
-}
-
 export type Post = {
     id: String;
-    user: User;
+    creator: User;
     createdAt: Date;
     updatedAt: Date;
-    message: String;
+    content: String;
     media: String;
-    effort: String;
-  }
+    effortEmoji: String;
+    effort: Effort;
+}
 
+export type Response = {
+    success: Boolean
+    message: String
+    posts: [Post]
+}
 
-  export type CreatePostReq = {
-    message: String;
-    effort: String;
+export type PostCreateInput = {
+    content: String;
+    effort: Effort;
     effortEmoji: String;
     media: String;
+    creator: {
+        connect: {
+          where: {
+            node: {
+              id: String;
+            }
+          }
+        }
+      }
+}
+
+export enum Effort {
+    LOW = 'LOW',
+    MEDIUM = 'MEDIUM',
+    HIGH = 'HIGH'
 }
 
 export type PostWhere = {
-    id: String;
+    ids: [String];
 }
 
-export type EditPostReq = {
-    message: String;
-    effort: String;
-    effortEmoji: String;
-    media: String;
-}
+
