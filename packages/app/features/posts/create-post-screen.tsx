@@ -9,6 +9,7 @@ import { User } from '../login/gqlTypes'
 import { CREATE_POST } from './gql'
 import { Effort, PostCreateInput } from './gqlTypes'
 import EmojiModal from 'react-native-emoji-modal';
+import { useCurrentUser } from 'app/hooks/useCurrentUser'
 
 
 export function CreatePostScreen() {
@@ -17,22 +18,23 @@ export function CreatePostScreen() {
   const [effort, setEffort] = useState<Effort | undefined>();
   const [effortEmoji, setEffortEmoji] = useState<String>("");
   const [mediaUrl, setMediaUrl] = useState<String>();
-  const [currentUser, setCurrentUser] = useState({} as User);
+  // const [currentUser, setCurrentUser] = useState({} as User);
   const [moreEffortEmojis, setMoreEffortEmojis] = useState(false);
   const [createPost, { data, loading, error, reset}] = useMutation<Response>(CREATE_POST);
+  const { currentUser } = useCurrentUser();
 
-  const fetchUser = useCallback(async()=> {
-    const userVal = await SecureStore.getItemAsync('user')
-    let user = JSON.parse('{}') as User
-    if(userVal != null){
-        user =  JSON.parse(userVal) as User
-    }
-    setCurrentUser(user);
-  }, [])
+  // const fetchUser = useCallback(async()=> {
+  //   const userVal = await SecureStore.getItemAsync('user')
+  //   let user = JSON.parse('{}') as User
+  //   if(userVal != null){
+  //       user =  JSON.parse(userVal) as User
+  //   }
+  //   setCurrentUser(user);
+  // }, [])
 
-  useEffect(() => {
-    fetchUser().catch(console.error)
-  }, [fetchUser,]);
+  // useEffect(() => {
+  //   fetchUser().catch(console.error)
+  // }, [fetchUser,]);
 
   async function handleSubmitPost(){
     const newPost = {} as PostCreateInput
@@ -48,7 +50,7 @@ export function CreatePostScreen() {
         connect: {
             where: {
                 node: {
-                    id: currentUser.id
+                    id: currentUser?.id!  // this should have a safety check around it!
                 }
             }
         }
@@ -100,10 +102,10 @@ const highEffortEmojis = ["😮‍💨","🥴","🥵","🤢","..."]
         <View className="flex">
           <View className="flex-row">
             <View className="items-center" style={{width:52, height:52, borderRadius: 52/ 2, borderWidth: 2, borderColor: getEffortColor()}}>
-                <Image source={{uri:currentUser.profilePic as string}} style={{width:44, height:44, borderRadius: 44/ 2, margin:2}}></Image>
+                <Image source={{uri:currentUser?.profilePic as string}} style={{width:44, height:44, borderRadius: 44/ 2, margin:2}}></Image>
             </View>
             <View className="flex-col justify-between  ml-4 mb-4">
-                <Text className="font-medium text-black duration-300 transition ease-in-out text-sm">{currentUser.firstName + " " + currentUser.lastName}</Text>
+                <Text className="font-medium text-black duration-300 transition ease-in-out text-sm">{currentUser?.firstName + " " + currentUser?.lastName}</Text>
                 <Text className="relative top-3 right-7 z-50">{effortEmoji}</Text>
             </View>
           </View>
