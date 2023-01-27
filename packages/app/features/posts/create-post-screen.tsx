@@ -14,9 +14,9 @@ import EmojiModal from 'react-native-emoji-modal';
 export function CreatePostScreen() {
   const router = useRouter()
   const [content, setContent] = useState(""); 
-  const [effort, setEffort] = useState<Effort>();
-  const [effortEmoji, setEffortEmoji] = useState("");
-  const [mediaUrl, setMediaUrl] = useState<string>();
+  const [effort, setEffort] = useState<Effort | undefined>();
+  const [effortEmoji, setEffortEmoji] = useState<String>("");
+  const [mediaUrl, setMediaUrl] = useState<String>();
   const [currentUser, setCurrentUser] = useState({} as User);
   const [moreEffortEmojis, setMoreEffortEmojis] = useState(false);
   const [createPost, { data, loading, error, reset}] = useMutation<Response>(CREATE_POST);
@@ -41,7 +41,9 @@ export function CreatePostScreen() {
     }
     newPost.effortEmoji = effortEmoji
     newPost.content = content
-    newPost.media = mediaUrl
+    if(mediaUrl !== undefined){
+      newPost.media = mediaUrl
+    }
     newPost.creator = {
         connect: {
             where: {
@@ -64,7 +66,7 @@ export function CreatePostScreen() {
     router.replace('/home')
 }
 
-function handleOnEffortEmojiClicked(effort, emoji) {
+function handleOnEffortEmojiClicked(effort: Effort, emoji: String) {
   console.log("Clicked on emoji: " + emoji)
   setEffort(effort)
   if(emoji === "..."){
@@ -111,28 +113,28 @@ const highEffortEmojis = ["😮‍💨","🥴","🥵","🤢","..."]
           {moreEffortEmojis && 
             <View className="z-150 dropdown absolute mt-8 ">
               <EmojiModal containerStyle={{position:'relative', zIndex:5}} 
-                onEmojiSelected={(item)=>{handleOnEffortEmojiClicked(effort, item)}}
+                onEmojiSelected={(item)=>{handleOnEffortEmojiClicked(effort as Effort, item as String)}}
                 onPressOutside={()=>{setMoreEffortEmojis(false)}} />
             </View>}
           <View className="flex items-start p-1 bg-green-200 rounded-full border-1" style={{position:'relative', zIndex:2}}>
             <FlatList className="flex flex-row" 
               horizontal={true}
               data={lowEffortEmojis}
-              renderItem={({item}: { item: string }) => <Text className="px-1" onPress={()=>{handleOnEffortEmojiClicked(Effort.LOW, item)}}>{item}</Text>}>
+              renderItem={({item}: { item: String }) => <Text className="px-1" onPress={()=>{handleOnEffortEmojiClicked(Effort.LOW, item)}}>{item}</Text>}>
             </FlatList> 
           </View>
           <View className="flex items-start p-1 bg-yellow-200 rounded-full border-1" style={{position:'relative', zIndex:2}}>
             <FlatList className="flex flex-row" 
               horizontal={true}
               data={mediumEffortEmojis}
-              renderItem={({item}: { item: string }) => <Text className="px-1" onPress={()=>{handleOnEffortEmojiClicked(Effort.MEDIUM, item)}}>{item}</Text>}>
+              renderItem={({item}: { item: String }) => <Text className="px-1" onPress={()=>{handleOnEffortEmojiClicked(Effort.MEDIUM, item)}}>{item}</Text>}>
             </FlatList>
           </View> 
           <View className="flex items-start p-1 bg-red-200 rounded-full border-1" style={{position:'relative', zIndex:2}}>
             <FlatList className="flex flex-row" 
               horizontal={true}
               data={highEffortEmojis}
-              renderItem={({item}: { item: string }) => <Text className="px-1" onPress={()=>{handleOnEffortEmojiClicked(Effort.HIGH, item)}}>{item}</Text>}>
+              renderItem={({item}: { item: String }) => <Text className="px-1" onPress={()=>{handleOnEffortEmojiClicked(Effort.HIGH, item)}}>{item}</Text>}>
             </FlatList>
           </View>
         </View>
