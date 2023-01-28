@@ -1,3 +1,4 @@
+import { Avatar } from "app/design/avatar"
 import { Effort, Post } from "app/features/posts/gqlTypes"
 
 export function FeedItem({post}){
@@ -5,7 +6,7 @@ export function FeedItem({post}){
     console.log("Feed item: "+ JSON.stringify(post))
     const feedPost = post as Post
     const postTime = new Date(feedPost.updatedAt).toLocaleDateString()
-      
+
     function feedMediaNull(){
         return feedPost.media === null || feedPost.media === "" || feedPost.media[0] === ""
     }
@@ -35,7 +36,12 @@ export function FeedItem({post}){
     return (
         <div className="md:flex-col z-10 border pt-4 rounded-lg shadow-md bg-gray-100 mb-5">
             <div className="flex px-4">
-                <img className={getStyleBasedOnEffort()} src={feedPost.creator.profilePic} alt="" style={{width:44, height:44}}></img>
+                <Avatar 
+                    profilePic={feedPost?.creator.profilePic}
+                    effort={feedPost?.effort}
+                    emoji={feedPost?.effortEmoji}
+                ></Avatar>
+                {/* <img className={getStyleBasedOnEffort()} src={feedPost.creator.profilePic} alt="" style={{width:44, height:44}}></img> */}
                 <div className="flex-col justify-between  items-center ml-4 mb-4">
                     <p className="font-medium text-black duration-300 transition ease-in-out text-sm">{fullName}</p>
                     <p className="font-medium text-slate-600 duration-300 transition ease-in-out text-sm">{postTime}</p>

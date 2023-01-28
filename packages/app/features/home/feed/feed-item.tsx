@@ -4,6 +4,7 @@ import { View } from "moti"
 import { Button, Image } from "react-native"
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Avatar } from "app/design/avatar";
 
 // import { sizes } from "graphql-playground-react/lib/styled/theme";
 
@@ -11,7 +12,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 export function FeedItem({post}: { post: Post }){
     const feedPost = post as Post
     console.log("Feed item: "+ JSON.stringify(post))
-    const postTime = JSON.stringify(feedPost.updatedAt)
+    const postTime = new Date(feedPost.updatedAt).toLocaleDateString()
 
     function feedMediaNull(){
         return feedPost.media === null || feedPost.media === "null" || feedPost.media[0] === ""
@@ -35,9 +36,14 @@ export function FeedItem({post}: { post: Post }){
     return (
         <View className="md:flex flex-start z-10 block rounded-lg shadow-md bg-gray-100 mb-5">
             <View className="flex-row px-4 pt-4 ">
-                <View className="items-center" style={{width:52, height:52, borderRadius: 52/ 2, borderWidth: 2, borderColor: getEffortColor()}}>
+                <Avatar 
+                    profilePic={feedPost?.creator.profilePic}
+                    effort={feedPost?.effort}
+                    emoji={feedPost?.effortEmoji}
+                ></Avatar>
+                {/* <View className="items-center" style={{width:52, height:52, borderRadius: 52/ 2, borderWidth: 2, borderColor: getEffortColor()}}>
                     <Image source={{uri:feedPost.creator.profilePic as string}} style={{width:44, height:44, borderRadius: 44/ 2, margin:2}}></Image>
-                </View>
+                </View> */}
                 <View className="flex-col justify-between  ml-4 mb-4">
                     <Text className="font-medium text-black duration-300 transition ease-in-out text-sm">{fullName}</Text>
                     <Text className="font-medium text-slate-600 duration-300 transition ease-in-out text-sm">{postTime}</Text>

@@ -1,3 +1,5 @@
+import { Avatar } from "app/design/avatar";
+import { useCurrentUser } from "app/hooks/useCurrentUser";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "solito/link";
@@ -6,6 +8,7 @@ import * as Auth from '../../helpers/auth'
 export default function NavBar(props) {
   const router = useRouter();
   const [isOpen, setOpen] = useState(false);
+  const { currentUser } = useCurrentUser();
 
   return (
     <header >
@@ -28,8 +31,14 @@ export default function NavBar(props) {
             </div>
             <div className="user-layout z-50 px-6"  id="user-layout">
                 <button onClick={() => setOpen(!isOpen)} type="button" className=" my-3" >
-                    <img src="https://mdbootstrap.com/img/new/avatars/2.jpg" className="rounded-full ring-4 ring-green-500 ring-offset-2 "
-                    style={{height:40, width:45}} alt="" loading="lazy" />
+                    <Avatar 
+                        profilePic={currentUser?.profilePic}
+                        effort={currentUser?.latestEffort}
+                        emoji={currentUser?.latestEffortEmoji}
+                        scale={0.75}
+                    ></Avatar>
+                    {/* <img src="https://mdbootstrap.com/img/new/avatars/2.jpg" className="rounded-full ring-4 ring-green-500 ring-offset-2 "
+                    style={{height:40, width:45}} alt="" loading="lazy" /> */}
                 </button>
                 <nav>
                     <div hidden={!isOpen} id="dropdown" className="dropdown absolute right-0 mx-4 my-4 text-base bg-gray-100 divide-y divide-gray-300 rounded shadow">

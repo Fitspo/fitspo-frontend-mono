@@ -1,15 +1,13 @@
 import { useMutation } from '@apollo/client'
-import { A, H1, P, Text, TextLink } from 'app/design/typography'
 import { View } from 'app/design/view'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { Button, Image, GestureResponderEvent, TextInput, FlatList } from 'react-native'
-import * as SecureStore from 'expo-secure-store';
+import { useState } from 'react'
+import { Button, Text, TextInput, FlatList } from 'react-native'
 import { useRouter } from 'solito/router'
-import { User } from '../login/gqlTypes'
 import { CREATE_POST } from './gql'
 import { Effort, PostCreateInput } from './gqlTypes'
 import EmojiModal from 'react-native-emoji-modal';
 import { useCurrentUser } from 'app/hooks/useCurrentUser'
+import { Avatar } from 'app/design/avatar'
 
 
 export function CreatePostScreen() {
@@ -18,23 +16,9 @@ export function CreatePostScreen() {
   const [effort, setEffort] = useState<Effort | undefined>();
   const [effortEmoji, setEffortEmoji] = useState<String>("");
   const [mediaUrl, setMediaUrl] = useState<String>();
-  // const [currentUser, setCurrentUser] = useState({} as User);
   const [moreEffortEmojis, setMoreEffortEmojis] = useState(false);
   const [createPost, { data, loading, error, reset}] = useMutation<Response>(CREATE_POST);
   const { currentUser } = useCurrentUser();
-
-  // const fetchUser = useCallback(async()=> {
-  //   const userVal = await SecureStore.getItemAsync('user')
-  //   let user = JSON.parse('{}') as User
-  //   if(userVal != null){
-  //       user =  JSON.parse(userVal) as User
-  //   }
-  //   setCurrentUser(user);
-  // }, [])
-
-  // useEffect(() => {
-  //   fetchUser().catch(console.error)
-  // }, [fetchUser,]);
 
   async function handleSubmitPost(){
     const newPost = {} as PostCreateInput
@@ -79,19 +63,6 @@ function handleOnEffortEmojiClicked(effort: Effort, emoji: String) {
   }
 }
 
-function getEffortColor(){
-  switch (effort) {
-      case Effort.HIGH:
-          return 'red'
-      case Effort.MEDIUM:
-          return 'yellow'
-      case Effort.LOW:
-          return 'green'
-      default:
-          return 'slate'
-  }
-}
-
 const lowEffortEmojis = ["😀","🙂","😎","🫠","..."]
 const mediumEffortEmojis = ["😐","😟","😵‍💫","😥","..."]
 const highEffortEmojis = ["😮‍💨","🥴","🥵","🤢","..."]
@@ -101,12 +72,13 @@ const highEffortEmojis = ["😮‍💨","🥴","🥵","🤢","..."]
       <View className="md:flex-col z-10 p-4 w-full h-full">
         <View className="flex">
           <View className="flex-row">
-            <View className="items-center" style={{width:52, height:52, borderRadius: 52/ 2, borderWidth: 2, borderColor: getEffortColor()}}>
-                <Image source={{uri:currentUser?.profilePic as string}} style={{width:44, height:44, borderRadius: 44/ 2, margin:2}}></Image>
-            </View>
+            <Avatar 
+              profilePic={currentUser?.profilePic}
+              effort={effort}
+              emoji={effortEmoji}
+            ></Avatar>
             <View className="flex-col justify-between  ml-4 mb-4">
                 <Text className="font-medium text-black duration-300 transition ease-in-out text-sm">{currentUser?.firstName + " " + currentUser?.lastName}</Text>
-                <Text className="relative top-3 right-7 z-50">{effortEmoji}</Text>
             </View>
           </View>
         </View>

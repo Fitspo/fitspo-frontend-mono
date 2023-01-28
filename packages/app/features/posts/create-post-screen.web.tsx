@@ -5,6 +5,8 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { User } from "../login/gqlTypes";
 import EmojiPicker from 'emoji-picker-react';
 import { CREATE_POST } from "./gql";
+import { Avatar } from "app/design/avatar";
+import { useCurrentUser } from "app/hooks/useCurrentUser";
 // import * as UploadService from '../../helpers/fileUploader';
 // import axios from "axios";
 
@@ -24,21 +26,22 @@ export function CreatePostScreen(){
     const [selectedFile, setSelectedFile] = useState<any>();
     const [mediaUrl, setMediaUrl] = useState<string>();
     const [message, setMessage] = useState("");
-    const [currentUser, setCurrentUser] = useState({} as User);
+    // const [currentUser, setCurrentUser] = useState({} as User);
     const [createPost, { data, loading, error, reset}] = useMutation<Response>(CREATE_POST);
+    const { currentUser } = useCurrentUser();
 
 
-    const fetchUser = useCallback(async()=> {
-        const userVal = await AsyncStorage.getItem('user')
-        let user = JSON.parse('{}') as User
-        if(userVal != null){
-            user =  JSON.parse(userVal) as User
-        }
-        setCurrentUser(user);
-    }, [])
+    // const fetchUser = useCallback(async()=> {
+    //     const userVal = await AsyncStorage.getItem('user')
+    //     let user = JSON.parse('{}') as User
+    //     if(userVal != null){
+    //         user =  JSON.parse(userVal) as User
+    //     }
+    //     setCurrentUser(user);
+    // }, [])
 
     useEffect(() => {
-        fetchUser().catch(console.error)
+        // fetchUser().catch(console.error)
         console.log("Current Input emoji state is: " + textInputEmoji)
         console.log("Current low effort emoji state is: " + moreLowEffortEmojis)
 
@@ -65,7 +68,7 @@ export function CreatePostScreen(){
             document.removeEventListener('click', handleClickOutside, true);
           };
 
-    }, [fetchUser,]);
+    }, []);
   
 
     async function handleSubmitPost(){
@@ -206,9 +209,9 @@ export function CreatePostScreen(){
 
     function getUserNameStyleBasedOnEffortEmoji(){
         if(effortEmoji.length > 0){
-            return "flex-col justify-between items-center mb-4"
+            return "flex-col justify-between items-center ml-4 mb-4"
         }else {
-            return "flex-col justify-between pl-5 items-center mb-4"
+            return "flex-col justify-between items-center ml-4 mb-4"
         }
     }
 
@@ -235,13 +238,13 @@ export function CreatePostScreen(){
         <div className="md:flex items-center justify-center p-4 w-full" >
             <div className="md:flex-col z-10 p-4 rounded-lg shadow-md w-full bg-gray-100" style={{width:'50%'}}>
                 <div className="flex px-4">
-                    <div className="flex justify-center items-baseline">
-                    <img className={getProfileIconStyleBasedOnEffort()} src={String(currentUser.profilePic)} alt="" style={{width:44, height:44}}></img>
-                        <p className="relative right-2 z-50">{effortEmoji}</p>
-                    </div>
-                    
-                    <div className={getUserNameStyleBasedOnEffortEmoji()}>
-                        <p className="font-medium text-black duration-300 transition ease-in-out text-sm">{currentUser.firstName + " " + currentUser.lastName}</p>
+                    <Avatar 
+                        profilePic={currentUser?.profilePic}
+                        effort={effort}
+                        emoji={effortEmoji}
+                    ></Avatar>
+                    <div className={"flex-col justify-between items-center ml-4 mb-4"}>
+                        <p className="font-medium text-black duration-300 transition ease-in-out text-sm">{currentUser?.firstName + " " + currentUser?.lastName}</p>
                     </div>
                 </div>
                 <div className="flex xl:flex-row lg:flex-col md:flex-col sm:flex-col space-x-4 my-2 h-auto" >
