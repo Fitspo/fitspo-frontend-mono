@@ -10,9 +10,16 @@ export type User = {
     firstName: String;
     lastName: String;
     profilePic: String;
-    latestEffort: String;
+    latestEffort: Effort;
+    latestEffortEmoji: String
     email: String;
   }
+
+export enum Effort {
+    LOW = 'LOW',
+    MEDIUM = 'MEDIUM',
+    HIGH = 'HIGH'
+}
 
 export type Response = {
     __typename: String;
