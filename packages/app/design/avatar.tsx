@@ -1,16 +1,23 @@
 import { Effort } from "app/features/posts/gqlTypes";
 import { Image, View, Text } from "react-native";
 
-export function Avatar({profilePic, effort, emoji, scale = 1}) {
+export interface AvatarProps {
+    profilePic?: string | undefined,
+    effort?: Effort | undefined,
+    emoji?: string | undefined,
+    scale?: number
+}
+export function Avatar({profilePic, effort, emoji, scale = 1}: AvatarProps) {
     const defaultProfilePic = "https://i.pinimg.com/550x/18/b9/ff/18b9ffb2a8a791d50213a9d595c4dd52.jpg"
 
     const getProfileImage = ()=> {
         if(profilePic === undefined || profilePic === null || profilePic === ""){
             return defaultProfilePic
         }else {
-            return profilePic as string
+            return profilePic
         }
     }
+    
 
     function getEffortColor(effort: Effort | undefined | null){
         switch (effort) {

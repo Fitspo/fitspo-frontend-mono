@@ -80,7 +80,7 @@ export function PostDetailScreen() {
                 </View>
             </View>
             {!feedMediaNull()  && <View  className="my-2">
-                <Image source={{uri: getPostMediaOrDefault()}} alt={"Post media"} style={{width:'100%', height:300}}></Image>
+                <Image source={{uri: getPostMediaOrDefault()}} style={{width:'100%', height:300}}></Image>
             </View>}
                 <View className="flex-col p-4 ">
                     <Text className="text-gray-700 mb-4">{data?.posts[0].content}</Text>
