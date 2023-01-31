@@ -1,7 +1,11 @@
 import { Avatar } from "app/design/avatar"
 import { Effort, Post } from "app/features/posts/gqlTypes"
+import error from "next/error"
+import { useEffect } from "react"
+import { useRouter } from 'solito/router'
 
 export function FeedItem({post}){
+    const router = useRouter()
 
     console.log("Feed item: "+ JSON.stringify(post))
     const feedPost = post as Post
@@ -11,30 +15,21 @@ export function FeedItem({post}){
         return feedPost.media === null || feedPost.media === "" || feedPost.media[0] === ""
     }
 
-    function getStyleBasedOnEffort(){
-        let effortColor
-        console.log("Getting style based on effort: " + feedPost.effort)
-        switch (feedPost.effort) {
-            case Effort.HIGH:
-                effortColor = 'ring-red-500'
-                break;
-            case Effort.MEDIUM:
-                effortColor = 'ring-yellow-500'
-                break;
-            case Effort.LOW:
-                effortColor = 'ring-green-500'
-                break;
-            default:
-                effortColor = 'ring-slate-500'
-                break;
-        }
-        return "rounded-full ring-4 ring-offset-2 " + effortColor
-    }
-
     const fullName = feedPost.creator.firstName + " " + feedPost.creator.lastName
 
+    function handleOnClick() {
+        const postId = String(feedPost.id);
+        router.push({
+            pathname: '/post/[id]',
+            query: {
+                id: postId,
+            }
+        })
+      }
+
     return (
-        <div className="md:flex-col z-10 border pt-4 rounded-lg shadow-md bg-gray-100 mb-5">
+        <div className="md:flex-col z-10 border pt-4 rounded-lg shadow-md bg-gray-100 mb-5"
+            onClick={()=>{handleOnClick()}}>
             <div className="flex px-4">
                 <Avatar 
                     profilePic={feedPost?.creator.profilePic}
