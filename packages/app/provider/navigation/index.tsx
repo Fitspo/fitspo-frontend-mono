@@ -12,7 +12,9 @@ export function NavigationProvider({
   const screens = {
     login: 'login',
     signup: 'signup',
-    home: 'home'
+    home: 'home',
+    createpost: 'create-post',
+    'post-detail': 'post/:id'
   }
 
   const linking = {

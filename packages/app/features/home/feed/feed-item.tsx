@@ -1,15 +1,18 @@
 import { Effort, Post } from "app/features/posts/gqlTypes"
 import { Text } from 'app/design/typography'
 import { View } from "moti"
-import { Button, Image } from "react-native"
+import { Button, Image, TouchableWithoutFeedback } from "react-native"
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Avatar } from "app/design/avatar";
+import * as NavigationService from '../../../navigation/native/NavigationService';
+import { useRouter } from 'solito/router'
 
 // import { sizes } from "graphql-playground-react/lib/styled/theme";
 
 
 export function FeedItem({post}: { post: Post }){
+    const router = useRouter()
     const feedPost = post as Post
     console.log("Feed item: "+ JSON.stringify(post))
     const postTime = new Date(feedPost.updatedAt).toLocaleDateString()
@@ -18,23 +21,27 @@ export function FeedItem({post}: { post: Post }){
         return feedPost.media === null || feedPost.media === "null" || feedPost.media[0] === ""
     }
 
-    function getEffortColor(){
-        switch (feedPost.effort) {
-            case Effort.HIGH:
-                return 'red'
-            case Effort.MEDIUM:
-                return 'yellow'
-            case Effort.LOW:
-                return 'green'
-            default:
-                return 'slate'
-        }
-    }
-
     const fullName = feedPost.creator.firstName + " " + feedPost.creator.lastName
 
+    function handleOnClick() {
+        console.log("Clicked feed item")
+        const postId = String(feedPost.id);
+        router.push({
+            pathname: '/post/[id]',
+            query: {
+                id: postId,
+            }
+        })
+        // NavigationService.navigationRef.resetRoot({
+        //     index: 0,
+        //     routes: [{name: 'post-detail'},],
+        // });
+        // NavigationService.navigationRef.navigate({screen: 'screenName '}, {userName: 'Lucy'});
+      }
+
     return (
-        <View className="md:flex flex-start z-10 block rounded-lg shadow-md bg-gray-100 mb-5">
+        <TouchableWithoutFeedback onPress={()=>{handleOnClick()}}> 
+        <View className="md:flex flex-start z-10 block rounded-lg shadow-md bg-gray-100 mb-5"> 
             <View className="flex-row px-4 pt-4 ">
                 <Avatar 
                     profilePic={feedPost?.creator.profilePic}
@@ -61,7 +68,7 @@ export function FeedItem({post}: { post: Post }){
                         <Button title="Comment"></Button> */}
                     </View>
                 </View>
-                
         </View>
+        </TouchableWithoutFeedback>
     )
 }

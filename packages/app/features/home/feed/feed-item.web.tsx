@@ -1,7 +1,5 @@
 import { Avatar } from "app/design/avatar"
-import { Effort, Post } from "app/features/posts/gqlTypes"
-import error from "next/error"
-import { useEffect } from "react"
+import { Post } from "app/features/posts/gqlTypes"
 import { useRouter } from 'solito/router'
 
 export function FeedItem({post}){
