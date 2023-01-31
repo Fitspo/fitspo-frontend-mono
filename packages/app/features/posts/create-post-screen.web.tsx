@@ -26,22 +26,10 @@ export function CreatePostScreen(){
     const [selectedFile, setSelectedFile] = useState<any>();
     const [mediaUrl, setMediaUrl] = useState<string>();
     const [message, setMessage] = useState("");
-    // const [currentUser, setCurrentUser] = useState({} as User);
     const [createPost, { data, loading, error, reset}] = useMutation<Response>(CREATE_POST);
     const { currentUser } = useCurrentUser();
 
-
-    // const fetchUser = useCallback(async()=> {
-    //     const userVal = await AsyncStorage.getItem('user')
-    //     let user = JSON.parse('{}') as User
-    //     if(userVal != null){
-    //         user =  JSON.parse(userVal) as User
-    //     }
-    //     setCurrentUser(user);
-    // }, [])
-
     useEffect(() => {
-        // fetchUser().catch(console.error)
         console.log("Current Input emoji state is: " + textInputEmoji)
         console.log("Current low effort emoji state is: " + moreLowEffortEmojis)
 
