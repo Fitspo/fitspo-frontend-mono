@@ -1,13 +1,13 @@
 import { User } from "../login/gqlTypes";
 
 export type Post = {
-    id: String;
+    id: string;
     creator: User;
     createdAt: Date;
     updatedAt: Date;
-    content: String;
-    media: String;
-    effortEmoji: String;
+    content: string;
+    media: string;
+    effortEmoji: string;
     effort: Effort;
 }
 
@@ -18,15 +18,15 @@ export type Response = {
 }
 
 export type PostCreateInput = {
-    content: String;
+    content: string;
     effort: Effort;
-    effortEmoji: String;
-    media: String;
+    effortEmoji: string;
+    media: string;
     creator: {
         connect: {
           where: {
             node: {
-              id: String;
+              id: string;
             }
           }
         }
@@ -40,7 +40,7 @@ export enum Effort {
 }
 
 export type PostWhere = {
-    ids: [String];
+    ids: [string];
 }
 
 

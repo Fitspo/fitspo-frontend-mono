@@ -1,38 +1,24 @@
 import { useMutation } from '@apollo/client'
-import { A, H1, P, Text, TextLink } from 'app/design/typography'
 import { View } from 'app/design/view'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { Button, Image, GestureResponderEvent, TextInput, FlatList } from 'react-native'
-import * as SecureStore from 'expo-secure-store';
+import { useState } from 'react'
+import { Button, Text, TextInput, FlatList } from 'react-native'
 import { useRouter } from 'solito/router'
-import { User } from '../login/gqlTypes'
 import { CREATE_POST } from './gql'
 import { Effort, PostCreateInput } from './gqlTypes'
 import EmojiModal from 'react-native-emoji-modal';
+import { useCurrentUser } from 'app/hooks/useCurrentUser'
+import { Avatar } from 'app/design/avatar'
 
 
 export function CreatePostScreen() {
   const router = useRouter()
   const [content, setContent] = useState(""); 
   const [effort, setEffort] = useState<Effort | undefined>();
-  const [effortEmoji, setEffortEmoji] = useState<String>("");
-  const [mediaUrl, setMediaUrl] = useState<String>();
-  const [currentUser, setCurrentUser] = useState({} as User);
+  const [effortEmoji, setEffortEmoji] = useState<string>("");
+  const [mediaUrl, setMediaUrl] = useState<string>();
   const [moreEffortEmojis, setMoreEffortEmojis] = useState(false);
   const [createPost, { data, loading, error, reset}] = useMutation<Response>(CREATE_POST);
-
-  const fetchUser = useCallback(async()=> {
-    const userVal = await SecureStore.getItemAsync('user')
-    let user = JSON.parse('{}') as User
-    if(userVal != null){
-        user =  JSON.parse(userVal) as User
-    }
-    setCurrentUser(user);
-  }, [])
-
-  useEffect(() => {
-    fetchUser().catch(console.error)
-  }, [fetchUser,]);
+  const { currentUser } = useCurrentUser();
 
   async function handleSubmitPost(){
     const newPost = {} as PostCreateInput
@@ -48,7 +34,7 @@ export function CreatePostScreen() {
         connect: {
             where: {
                 node: {
-                    id: currentUser.id
+                    id: currentUser?.id!  // this should have a safety check around it!
                 }
             }
         }
@@ -66,7 +52,7 @@ export function CreatePostScreen() {
     router.replace('/home')
 }
 
-function handleOnEffortEmojiClicked(effort: Effort, emoji: String) {
+function handleOnEffortEmojiClicked(effort: Effort, emoji: string) {
   console.log("Clicked on emoji: " + emoji)
   setEffort(effort)
   if(emoji === "..."){
@@ -74,19 +60,6 @@ function handleOnEffortEmojiClicked(effort: Effort, emoji: String) {
   }else {
     setEffortEmoji(emoji)
     setMoreEffortEmojis(false)
-  }
-}
-
-function getEffortColor(){
-  switch (effort) {
-      case Effort.HIGH:
-          return 'red'
-      case Effort.MEDIUM:
-          return 'yellow'
-      case Effort.LOW:
-          return 'green'
-      default:
-          return 'slate'
   }
 }
 
@@ -99,12 +72,13 @@ const highEffortEmojis = ["😮‍💨","🥴","🥵","🤢","..."]
       <View className="md:flex-col z-10 p-4 w-full h-full">
         <View className="flex">
           <View className="flex-row">
-            <View className="items-center" style={{width:52, height:52, borderRadius: 52/ 2, borderWidth: 2, borderColor: getEffortColor()}}>
-                <Image source={{uri:currentUser.profilePic as string}} style={{width:44, height:44, borderRadius: 44/ 2, margin:2}}></Image>
-            </View>
+            <Avatar 
+              profilePic={currentUser?.profilePic}
+              effort={effort}
+              emoji={effortEmoji}
+            ></Avatar>
             <View className="flex-col justify-between  ml-4 mb-4">
-                <Text className="font-medium text-black duration-300 transition ease-in-out text-sm">{currentUser.firstName + " " + currentUser.lastName}</Text>
-                <Text className="relative top-3 right-7 z-50">{effortEmoji}</Text>
+                <Text className="font-medium text-black duration-300 transition ease-in-out text-sm">{currentUser?.firstName + " " + currentUser?.lastName}</Text>
             </View>
           </View>
         </View>
@@ -113,28 +87,28 @@ const highEffortEmojis = ["😮‍💨","🥴","🥵","🤢","..."]
           {moreEffortEmojis && 
             <View className="z-150 dropdown absolute mt-8 ">
               <EmojiModal containerStyle={{position:'relative', zIndex:5}} 
-                onEmojiSelected={(item)=>{handleOnEffortEmojiClicked(effort as Effort, item as String)}}
+                onEmojiSelected={(item)=>{handleOnEffortEmojiClicked(effort as Effort, item as string)}}
                 onPressOutside={()=>{setMoreEffortEmojis(false)}} />
             </View>}
           <View className="flex items-start p-1 bg-green-200 rounded-full border-1" style={{position:'relative', zIndex:2}}>
             <FlatList className="flex flex-row" 
               horizontal={true}
               data={lowEffortEmojis}
-              renderItem={({item}: { item: String }) => <Text className="px-1" onPress={()=>{handleOnEffortEmojiClicked(Effort.LOW, item)}}>{item}</Text>}>
+              renderItem={({item}: { item: string }) => <Text className="px-1" onPress={()=>{handleOnEffortEmojiClicked(Effort.LOW, item)}}>{item}</Text>}>
             </FlatList> 
           </View>
           <View className="flex items-start p-1 bg-yellow-200 rounded-full border-1" style={{position:'relative', zIndex:2}}>
             <FlatList className="flex flex-row" 
               horizontal={true}
               data={mediumEffortEmojis}
-              renderItem={({item}: { item: String }) => <Text className="px-1" onPress={()=>{handleOnEffortEmojiClicked(Effort.MEDIUM, item)}}>{item}</Text>}>
+              renderItem={({item}: { item: string }) => <Text className="px-1" onPress={()=>{handleOnEffortEmojiClicked(Effort.MEDIUM, item)}}>{item}</Text>}>
             </FlatList>
           </View> 
           <View className="flex items-start p-1 bg-red-200 rounded-full border-1" style={{position:'relative', zIndex:2}}>
             <FlatList className="flex flex-row" 
               horizontal={true}
               data={highEffortEmojis}
-              renderItem={({item}: { item: String }) => <Text className="px-1" onPress={()=>{handleOnEffortEmojiClicked(Effort.HIGH, item)}}>{item}</Text>}>
+              renderItem={({item}: { item: string }) => <Text className="px-1" onPress={()=>{handleOnEffortEmojiClicked(Effort.HIGH, item)}}>{item}</Text>}>
             </FlatList>
           </View>
         </View>

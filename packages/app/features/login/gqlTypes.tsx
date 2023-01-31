@@ -4,15 +4,22 @@ export type SignInReq = {
 }
 
 export type User = {
-    id: String;
+    id: string;
     createdAt: Date;
     updatedAt: Date;
-    firstName: String;
-    lastName: String;
-    profilePic: String;
-    latestEffort: String;
-    email: String;
+    firstName: string;
+    lastName: string;
+    profilePic: string;
+    latestEffort: Effort;
+    latestEffortEmoji: string
+    email: string;
   }
+
+export enum Effort {
+    LOW = 'LOW',
+    MEDIUM = 'MEDIUM',
+    HIGH = 'HIGH'
+}
 
 export type Response = {
     __typename: String;

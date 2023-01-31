@@ -125,11 +125,11 @@ export function SignupScreen() {
     
                 // Navigate to home screen
                 if(Platform.OS === 'web'){
-                    router.replace('/login')
+                    router.replace('/home')
                 }else {
                     NavigationService.navigationRef.resetRoot({
                         index: 0,
-                        routes: [{name: 'login'},],
+                        routes: [{name: 'home'},],
                     });
                 }      
             }else if(!data?.signUp.success){

@@ -7,32 +7,19 @@ import { User } from '../login/gqlTypes';
 import { GET_POSTS } from '../posts/gql';
 import { Post, Response } from '../posts/gqlTypes';
 import { FeedItem } from './feed/feed-item';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useCurrentUser } from "app/hooks/useCurrentUser";
+import * as NavigationService from '../../navigation/native/NavigationService';
 
 // import Image from 'next/image'
 export function HomeScreen() {
-
-  const [currentUser, setCurrentUser] = useState({} as User);
+  const { currentUser } = useCurrentUser();
   const [refreshing, setRefreshing] = useState(false)
 
-  const fetchUser = useCallback(async()=> {
-    const userVal = await AsyncStorage.getItem('user')
-      let user = JSON.parse('{}') as User
-      if(userVal != null){
-        user =  JSON.parse(userVal) as User
-      }
-      setCurrentUser(user);
-      console.log("Current User: " + JSON.stringify(user))
-  }, [])
-
     const { loading, error, data, refetch } = useQuery<Response>(GET_POSTS, {
-        variables: { userId: Number(currentUser.id) },
+        variables: { userId: Number(currentUser?.id) },
       });
 
-    // const [userPosts, { data, loading, error, reset}] = useQuery<PostResponse>(GET_POSTS);
-
     useEffect(() => {
-      fetchUser().catch(console.error)
       if (loading) console.log("Fetching Posts...");
       if (error) console.log("Error Fetching Posts..." + error.message + data);
       if(data != null){
@@ -43,10 +30,8 @@ export function HomeScreen() {
             console.log("Got empty post array: " + data)
           }
       }
-  
-    //   userPosts({ variables: { userId: "5" } });
-      
-  }, [fetchUser, loading, error, data]);
+        
+  }, [loading, error, data]);
 
   const rows: any[] = [];
     let numberOfPosts = data?.posts ? data?.posts.length : 0
@@ -57,6 +42,8 @@ export function HomeScreen() {
         console.log("feed item " + i + " contains post: " + JSON.stringify(post))
         rows.push(post);
     }
+
+
 
   return (
     <View className="flex-1 bg-white ">
